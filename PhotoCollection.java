@@ -12,11 +12,10 @@ public class PhotoCollection {
     public static void main(String[] args)  {
         for (int day = 1; day <= 30; day++) {
             String page = null;
-            try {
-                page = downloadWebPage(" https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=2021-11-"+day);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            DowloadWebPage downloadWebPage = new DowloadWebPage();
+            // скачивает страницу в api
+            page = downloadWebPage.downloadWebPage(" https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=2021-11-"+day);
+            // находит ссылку на картинку скачивает и создаёт файл jpg
             int urlBegin = page.lastIndexOf("url");
             int urlEnd = page.lastIndexOf("}");
             String url = page.substring(urlBegin + 6, urlEnd - 1);
@@ -30,20 +29,5 @@ public class PhotoCollection {
             System.out.println("day"+day+" saved");
         }
         System.out.println("Picture saved");
-    }
-    private static String downloadWebPage(String url) throws IOException {
-        StringBuilder result = new StringBuilder();
-        String line;
-        URLConnection urlConnection = new URL(url).openConnection();
-        try (InputStream is = urlConnection.getInputStream();
-             BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
-            while ((line = br.readLine()) != null) {
-                result.append(line);
-            }
-
-        }
-
-        return result.toString();
-
     }
 }
